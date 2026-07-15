@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+
+{% block title %}Order Created - Microservices App{% endblock %}
+
+{% block content %}
+<div class="section">
+    <div class="alert alert-success">
+        <strong>✅ Order Created Successfully!</strong>
+    </div>
+    
+    <div style="background: #f8f9fa; padding: 25px; border-radius: 8px; border: 1px solid #e9ecef;">
+        <h3 style="color: #333; margin-bottom: 20px;">Order Details</h3>
+        
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+            <div>
+                <p style="color: #666; font-size: 14px; margin-bottom: 5px;">Order ID</p>
+                <p style="font-weight: 600; word-break: break-all;">{{ order.id }}</p>
+            </div>
+            
+            <div>
+                <p style="color: #666; font-size: 14px; margin-bottom: 5px;">Customer</p>
+                <p style="font-weight: 600;">{{ order.customer_name }}</p>
+            </div>
+            
+            <div>
+                <p style="color: #666; font-size: 14px; margin-bottom: 5px;">Product</p>
+                <p style="font-weight: 600;">{{ order.product_name }}</p>
+            </div>
+            
+            <div>
+                <p style="color: #666; font-size: 14px; margin-bottom: 5px;">Unit Price</p>
+                <p style="font-weight: 600;">${{ "%.2f"|format(order.unit_price) }}</p>
+            </div>
+            
+            <div>
+                <p style="color: #666; font-size: 14px; margin-bottom: 5px;">Quantity</p>
+                <p style="font-weight: 600;">{{ order.quantity }}</p>
+            </div>
+            
+            <div>
+                <p style="color: #666; font-size: 14px; margin-bottom: 5px;">Total Amount</p>
+                <p style="font-weight: 600; font-size: 18px; color: #667eea;">${{ "%.2f"|format(order.total_amount) }}</p>
+            </div>
+            
+            <div>
+                <p style="color: #666; font-size: 14px; margin-bottom: 5px;">Status</p>
+                <p><span style="background: #e3f2fd; color: #1976d2; padding: 4px 8px; border-radius: 4px; font-weight: 500;">{{ order.status }}</span></p>
+            </div>
+            
+            <div>
+                <p style="color: #666; font-size: 14px; margin-bottom: 5px;">Created At</p>
+                <p style="font-weight: 600;">{{ order.created_at }}</p>
+            </div>
+        </div>
+    </div>
+    
+    <div style="margin-top: 25px; display: flex; gap: 15px;">
+        <a href="/" style="display: inline-block; padding: 12px 25px; background: #667eea; color: white; text-decoration: none; border-radius: 6px; font-weight: 500;">← Back to Home</a>
+        <a href="/orders" style="display: inline-block; padding: 12px 25px; background: #764ba2; color: white; text-decoration: none; border-radius: 6px; font-weight: 500;">View All Orders</a>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+
+{% block title %}Error - Microservices App{% endblock %}
+
+{% block content %}
+<div class="section">
+    <div class="alert alert-error">
+        <strong>❌ Error</strong>
+    </div>
+    
+    <div style="background: #f8f9fa; padding: 25px; border-radius: 8px; border: 1px solid #e9ecef;">
+        <h3 style="color: #721c24; margin-bottom: 15px;">Something went wrong</h3>
+        <p style="color: #666; margin-bottom: 20px; line-height: 1.6;">
+            <strong>Error Details:</strong><br>
+            <code style="display: block; background: white; padding: 15px; border-left: 4px solid #f8d7da; border-radius: 4px; margin-top: 10px; word-break: break-all;">{{ error }}</code>
+        </p>
+    </div>
+    
+    <div style="margin-top: 25px;">
+        <a href="/" style="display: inline-block; padding: 12px 25px; background: #667eea; color: white; text-decoration: none; border-radius: 6px; font-weight: 500;">← Back to Home</a>
+    </div>
+</div>
+{% endblock %}

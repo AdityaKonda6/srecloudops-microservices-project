@@ -1,0 +1,11 @@
+# This file is used when installing kube-prometheus-stack.
+# It automatically configures Grafana to add Loki as a data source
+# so that you don't have to set it up manually in the Grafana UI!
+
+grafana:
+  additionalDataSources:
+    - name: Loki
+      type: loki
+      # This URL points to the internal Kubernetes service created by the loki-stack
+      url: http://loki.monitoring.svc.cluster.local:3100
+      access: proxy

@@ -19,8 +19,8 @@ services:
 
   catalog-service:
     build:
-      context: .
-      dockerfile: catalog_service/Dockerfile
+      context: ./catalog_service
+      dockerfile: Dockerfile
     environment:
       DATABASE_URL: postgresql://microservices:password@postgres:5432/catalog
     ports:
@@ -31,8 +31,8 @@ services:
 
   orders-service:
     build:
-      context: .
-      dockerfile: orders_service/Dockerfile
+      context: ./orders_service
+      dockerfile: Dockerfile
     environment:
       DATABASE_URL: postgresql://microservices:password@postgres:5432/orders
     ports:
@@ -43,8 +43,8 @@ services:
 
   ui:
     build:
-      context: .
-      dockerfile: ui/Dockerfile
+      context: ./ui
+      dockerfile: Dockerfile
     environment:
       CATALOG_SERVICE_URL: http://catalog-service:8000
       ORDERS_SERVICE_URL: http://orders-service:8000

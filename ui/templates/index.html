@@ -6,18 +6,18 @@
 <div class="section">
     <h2>📦 Available Products</h2>
     {% if products %}
-        <div class="products-grid">
-            {% for product in products %}
-            <div class="card">
-                <div class="card-title">{{ product.name }}</div>
-                <div style="color: #666; margin-bottom: 10px; font-size: 14px;">{{ product.description }}</div>
-                <div class="card-price">${{ "%.2f"|format(product.price) }}</div>
-                <span class="text-muted">ID: {{ product.id }}</span>
-            </div>
-            {% endfor %}
+    <div class="products-grid">
+        {% for product in products %}
+        <div class="card">
+            <div class="card-title">{{ product.name }}</div>
+            <div style="color: #666; margin-bottom: 10px; font-size: 14px;">{{ product.description }}</div>
+            <div class="card-price">${{ "%.2f"|format(product.price) }}</div>
+            <span class="text-muted">ID: {{ product.id }}</span>
         </div>
+        {% endfor %}
+    </div>
     {% else %}
-        <div class="alert alert-error">⚠️ Could not load products. Catalog service may be unavailable.</div>
+    <div class="alert alert-error">⚠️ Could not load products. Catalog service may be unavailable.</div>
     {% endif %}
 </div>
 
@@ -29,7 +29,7 @@
             <label for="customer_name">Customer Name</label>
             <input type="text" id="customer_name" name="customer_name" value="Alex" required>
         </div>
-        
+
         <div class="form-group">
             <label for="product_id">Select Product</label>
             <select id="product_id" name="product_id" required>
@@ -39,12 +39,12 @@
                 {% endfor %}
             </select>
         </div>
-        
+
         <div class="form-group">
             <label for="quantity">Quantity</label>
             <input type="number" id="quantity" name="quantity" min="1" value="1" required>
         </div>
-        
+
         <button type="submit">📝 Create Order</button>
     </form>
     {% else %}

@@ -67,7 +67,7 @@ microservices:
       className: "nginx"
       annotations: {}
       hosts:
-        - host: simpleproject.local
+        - host: srelocal
           paths:
             - path: /
               pathType: ImplementationSpecific

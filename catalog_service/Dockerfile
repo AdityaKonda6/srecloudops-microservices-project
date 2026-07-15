@@ -8,7 +8,7 @@ ENV PYTHONDONTWRITEBYTECODE=1 \
 COPY requirements.txt ./
 RUN pip install --no-cache-dir -r requirements.txt
 
-COPY catalog_service ./catalog_service
+COPY . ./catalog_service
 
 EXPOSE 8000
 

@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}-orders-service
+spec:
+  selector:
+    matchLabels:
+      app: {{ .Release.Name }}-orders-service
+  template:
+    metadata:
+      labels:
+        app: {{ .Release.Name }}-orders-service
+    spec:
+      containers:
+      - name: orders-service
+        image: {{ .Values.ordersService.image }}
+        imagePullPolicy: IfNotPresent
+        env:
+        - name: DATABASE_URL
+          value: "postgresql://{{ .Values.postgres.user }}:{{ .Values.postgres.password }}@{{ .Release.Name }}-postgres:5432/orders"
+        ports:
+        - containerPort: {{ .Values.ordersService.port }}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Release.Name }}-orders-service
+spec:
+  selector:
+    app: {{ .Release.Name }}-orders-service
+  ports:
+  - port: {{ .Values.ordersService.port }}
+    targetPort: {{ .Values.ordersService.port }}

@@ -1,0 +1,19 @@
+postgres:
+  image: "postgres:16-alpine"
+  user: "microservices"
+  password: "password"
+  databases: "catalog,orders"
+
+catalogService:
+  image: "catalog-service:latest"
+  port: 8000
+
+ordersService:
+  image: "orders-service:latest"
+  port: 8000
+
+ui:
+  image: "ui:latest"
+  port: 8000
+  type: NodePort
+  nodePort: 30080

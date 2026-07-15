@@ -1,3 +1,15 @@
+# Secret for sensitive data
+apiVersion: v1
+kind: Secret
+metadata:
+  name: {{ .Release.Name }}-postgres-secret
+type: Opaque
+data:
+  postgres-password: {{ .Values.postgres.password | b64enc | quote }}
+  catalog-db-url: {{ printf "postgresql://%s:%s@%s-postgres:5432/catalog" .Values.postgres.user .Values.postgres.password .Release.Name | b64enc | quote }}
+  orders-db-url: {{ printf "postgresql://%s:%s@%s-postgres:5432/orders" .Values.postgres.user .Values.postgres.password .Release.Name | b64enc | quote }}
+---
+# Postgres Init Script ConfigMap
 apiVersion: v1
 kind: ConfigMap
 metadata:
@@ -6,20 +18,16 @@ data:
   init-db.sh: |
     #!/bin/bash
     set -e
-    
-    # Create multiple databases (split by comma)
     IFS=',' read -ra DATABASES <<< "$POSTGRES_MULTIPLE_DATABASES"
     for db in "${DATABASES[@]}"; do
-      # Trim whitespace
       db=$(echo "$db" | xargs)
       echo "Creating database $db..."
       psql -v ON_ERROR_STOP=1 --username "$POSTGRES_USER" <<-EOSQL
         CREATE DATABASE $db;
     EOSQL
     done
-    
-    echo "Database initialization complete"
 ---
+# Postgres PVC
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
@@ -29,8 +37,9 @@ spec:
     - ReadWriteOnce
   resources:
     requests:
-      storage: 1Gi
+      storage: {{ .Values.postgres.storage }}
 ---
+# Postgres Deployment
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -51,11 +60,14 @@ spec:
         - name: POSTGRES_USER
           value: {{ .Values.postgres.user }}
         - name: POSTGRES_PASSWORD
-          value: {{ .Values.postgres.password }}
+          valueFrom:
+            secretKeyRef:
+              name: {{ .Release.Name }}-postgres-secret
+              key: postgres-password
         - name: POSTGRES_MULTIPLE_DATABASES
           value: {{ .Values.postgres.databases }}
         ports:
-        - containerPort: 5432
+        - containerPort: {{ .Values.postgres.port }}
         volumeMounts:
         - name: postgres-data
           mountPath: /var/lib/postgresql/data
@@ -71,6 +83,7 @@ spec:
           name: {{ .Release.Name }}-postgres-init-script
           defaultMode: 0755
 ---
+# Postgres Service
 apiVersion: v1
 kind: Service
 metadata:
@@ -79,5 +92,5 @@ spec:
   selector:
     app: {{ .Release.Name }}-postgres
   ports:
-  - port: 5432
-    targetPort: 5432
+  - port: {{ .Values.postgres.port }}
+    targetPort: {{ .Values.postgres.port }}

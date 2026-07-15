@@ -1,0 +1,44 @@
+{{- range $name, $svc := .Values.microservices }}
+---
+# Deployment for {{ $name }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ $.Release.Name }}-{{ $name }}
+spec:
+  {{- if not $svc.autoscaling.enabled }}
+  replicas: {{ $svc.replicaCount | default 1 }}
+  {{- end }}
+  selector:
+    matchLabels:
+      app: {{ $.Release.Name }}-{{ $name }}
+  template:
+    metadata:
+      labels:
+        app: {{ $.Release.Name }}-{{ $name }}
+    spec:
+      containers:
+      - name: {{ $name }}
+        image: "{{ $svc.image.repository }}:{{ $svc.image.tag }}"
+        imagePullPolicy: {{ $svc.image.pullPolicy | default "IfNotPresent" }}
+        {{- if or $svc.env $svc.envSecret }}
+        env:
+        {{- range $k, $v := $svc.env }}
+        - name: {{ $k }}
+          value: {{ tpl $v $ | quote }}
+        {{- end }}
+        {{- range $k, $v := $svc.envSecret }}
+        - name: {{ $k }}
+          valueFrom:
+            secretKeyRef:
+              name: {{ $.Release.Name }}-postgres-secret
+              key: {{ $v }}
+        {{- end }}
+        {{- end }}
+        ports:
+        - containerPort: {{ $svc.service.port }}
+        {{- if $svc.resources }}
+        resources:
+          {{- toYaml $svc.resources | nindent 10 }}
+        {{- end }}
+{{- end }}
